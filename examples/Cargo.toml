@@ -1,0 +1,13 @@
+[package]
+name = "examples"
+version = "0.1.0"
+publish = false
+edition = "2021"
+authors = ["Christian KLAT <christian.klat@gmail.com>"]
+
+[dev-dependencies]
+rtf-converter = { path = "../rtf-converter", version = "0.1" }
+
+[[example]]
+name = "counterparts"
+path = "counterparts.rs"

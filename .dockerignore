@@ -1,0 +1,9 @@
+*
+
+!**/Cargo.toml
+!**/Cargo.lock
+!**/src
+rtf-converter-benches
+!**/config
+# for now, only include rtf-converter binary
+rtf-converter-wasm

@@ -1,0 +1,18 @@
+ignore:
+  - "rtf-converter/tests"
+  - "rtf-converter-wasm"
+  - "rtf-converter-benches"
+  - "examples"
+
+comment:
+  layout: "reach, diff, flags, files"
+  require_changes: true
+
+github_checks:
+  annotations: false
+
+coverage:
+  status:
+    project:
+      default:
+        threshold: 5%
