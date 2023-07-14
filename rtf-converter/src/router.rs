@@ -2,14 +2,14 @@
 
 use crate::{
     middleware::logging::{log_request_response, DebugOnlyLogger, Logger},
-    routes::{fallback::notfound_404, health, ping},
+    routes::{fallback::notfound_404, health, convert},
 };
-use axum::{routing::get, Router};
+use axum::{routing::get, routing::post, Router};
 
 /// Setup main router for application.
 pub fn setup_app_router() -> Router {
     let mut router = Router::new()
-        .route("/ping", get(ping::get))
+        .route("/convert", post(convert::convert))
         .fallback(notfound_404);
 
     router = router.layer(axum::middleware::from_fn(log_request_response::<Logger>));

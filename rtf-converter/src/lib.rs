@@ -15,11 +15,15 @@ pub mod routes;
 pub mod settings;
 pub mod tracer;
 pub mod tracing_layers;
+pub mod rtf;
+
 
 /// Test utilities.
 #[cfg(any(test, feature = "test_utils"))]
 #[cfg_attr(docsrs, doc(cfg(feature = "test_utils")))]
 pub mod test_utils;
+
+
 /// Add two integers together.
 pub fn add(a: i32, b: i32) -> i32 {
     a + b

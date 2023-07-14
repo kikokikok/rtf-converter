@@ -2,14 +2,14 @@
 
 use crate::{
     error::AppError,
-    routes::{health, ping},
+    routes::{health, convert},
 };
 use utoipa::OpenApi;
 
 /// API documentation generator.
 #[derive(OpenApi)]
 #[openapi(
-        paths(health::healthcheck, ping::get),
+        paths(health::healthcheck, convert::convert),
         components(schemas(AppError)),
         tags(
             (name = "", description = "rtf-converter service/middleware")
