@@ -16,3 +16,4 @@ private
 *.tmp
 **/.history
 **/.DS_Store
+/.idea/aws.xml
