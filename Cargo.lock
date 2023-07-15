@@ -226,6 +226,31 @@ dependencies = [
 ]
 
 [[package]]
+name = "axum_typed_multipart"
+version = "0.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f5d65945a15a096891a9eb8379dc5ce0be289feba2b4b3b89c2b62fcad065c23"
+dependencies = [
+ "anyhow",
+ "axum",
+ "axum_typed_multipart_macros",
+ "tempfile",
+ "thiserror",
+]
+
+[[package]]
+name = "axum_typed_multipart_macros"
+version = "0.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "90fc7d662ef10618d9d5242896f6730047af33bc9d332c586d0f0e25d5948040"
+dependencies = [
+ "darling",
+ "proc-macro-error",
+ "quote",
+ "syn 2.0.25",
+]
+
+[[package]]
 name = "backtrace"
 version = "0.3.68"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2671,6 +2696,7 @@ dependencies = [
  "async-trait",
  "axum",
  "axum-tracing-opentelemetry",
+ "axum_typed_multipart",
  "base64 0.21.2",
  "chrono",
  "codepage",
@@ -2708,6 +2734,7 @@ dependencies = [
  "serde_json",
  "serde_path_to_error",
  "serde_with",
+ "string-builder",
  "sysinfo",
  "task-local-extensions",
  "thiserror",
@@ -2724,6 +2751,7 @@ dependencies = [
  "ulid",
  "url",
  "utoipa",
+ "utoipa-gen",
  "utoipa-swagger-ui",
  "wiremock",
 ]
@@ -3146,6 +3174,12 @@ dependencies = [
  "base64ct",
  "der",
 ]
+
+[[package]]
+name = "string-builder"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2bd10a070fb1f2796a288abec42695db4682a82b6f12ffacd60fb8d5ad3a4a12"
 
 [[package]]
 name = "strsim"

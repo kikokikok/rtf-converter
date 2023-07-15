@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use tracing::{info, debug, error, trace};
+use tracing::{debug, error, trace};
 
 use super::to_text::GroupState;
 

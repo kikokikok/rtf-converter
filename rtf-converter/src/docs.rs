@@ -2,7 +2,13 @@
 
 use crate::{
     error::AppError,
-    routes::{health, convert},
+    routes::{
+        convert::{
+            self,
+            RequestData
+        },
+        health,
+    }
 };
 use utoipa::OpenApi;
 
@@ -10,7 +16,7 @@ use utoipa::OpenApi;
 #[derive(OpenApi)]
 #[openapi(
         paths(health::healthcheck, convert::convert),
-        components(schemas(AppError)),
+        components(schemas(AppError), schemas(RequestData)),
         tags(
             (name = "", description = "rtf-converter service/middleware")
         )

@@ -246,7 +246,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           build-args: |
-            RUST_BUILD_IMG=rust:1.65-slim-bullseye
+            RUST_BUILD_IMG=rust:1.71-slim-bullseye
           cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/rtf-converter:latest
           cache-to: type=registry,ref=ghcr.io/${{ github.repository_owner }}/rtf-converter:latest,mode=max
           file: docker/Dockerfile
