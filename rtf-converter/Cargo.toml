@@ -39,6 +39,7 @@ axum-tracing-opentelemetry = { version = "0.10", features = ["otlp"] }
 base64 = "0.21"
 chrono = { version = "0.4", default-features = false, features = ["clock"] }
 config = "0.13"
+config-secret = "0.1.0"
 console-subscriber = { version = "0.1", default-features = false, features = [ "parking_lot" ], optional = true }
 const_format = "0.2"
 futures = "0.3"

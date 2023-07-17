@@ -1,43 +1,71 @@
-use sqlx::{types::Uuid, PgPool};
-use chrono::Utc;
-use serde::{Deserialize, Serialize};
-use validator::{Validate, ValidationError};
+use crate::infra::db::postgres::Db;
+use crate::error::Result;
+use crate::models::user::{NewUser, User, UserConditions, UserId, UserList};
+use anyhow::Context;
+use async_trait::async_trait;
+use mockall::automock;
+use crate::models::file::{File, FileId};
 
-#[derive(sqlx::FromRow, Serialize, Deserialize, Validate)]
-pub struct File {
-	#[serde(skip_serializing)]
-	pub id: Uuid,
-
-	#[serde(skip_serializing)]
-	pub tenant_id: Uuid,
-
-	#[serde(skip_serializing)]
-	pub owner_id: Option<Uuid>,
-
-	pub file_binary_content: Vec<u8>,
-
-	#[validate(length(min = 1, max = 255))]
-	pub content_type: String,
-
-	#[validate(length(min = 1, max = 255))]
-	pub file_name: String,
-
-	#[validate(range(min = 0))]
-	pub file_size: u64,
-
-	#[serde(skip_serializing)]
-	pub insertion_date: chrono::NaiveDateTime,
-
-	#[validate]
-	pub max_age: Option<chrono::Duration>,
-
-	pub templating_engine: Option<String>,
-
-	pub templating_engine_version: Option<String>,
-
-	#[validate(range(min = 1))]
-	pub version: i32,
+pub struct FileRepoImpl {
+	pool: Db,
 }
+impl UserRepoImpl {
+	pub fn new(pool: Db) -> Self {
+		Self { pool: pool }
+	}
+}
+
+#[automock]
+#[async_trait]
+pub trait UserRepo {
+	async fn find_all(&self, conditions: &UserConditions) -> Result<UserList>;
+	async fn add(&self, user_data: &NewUser) -> Result<UserId>;
+	async fn find_by_id(&self, user_id: i32) -> Result<User>;
+}
+
+#[async_trait]
+impl UserRepo for FileRepoImpl {
+	async fn find_all(&self, conditions: &UserConditions) -> Result<FileList> {
+		let mut query = sqlx::query_as::<_, File>("select * from files");
+		if let Some(name) = &conditions.name {
+			query = sqlx::query_as::<_, File>("select * from files where name LIKE $1")
+				.bind(format!("%{}%", name))
+		}
+		let result = query
+			.fetch_all(&*self.pool)
+			.await
+			.context("DB ERROR (find all users)")?;
+		Ok(result)
+	}
+
+	async fn add(&self, file_data: &NewFile) -> Result<FileId> {
+		let row = sqlx::query_as::<_, FileId>(
+			r#"
+			INSERT INTO files (tenant_id, owner_id, file_binary_content, content_type, file_name, max_age, templating_engine, templating_engine_version, version)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+            RETURNING id
+            "#,
+		)
+			.bind(&file_data.name)
+			.bind(&file_data.msg)
+			.bind(&file_data.age)
+			.fetch_one(&*self.pool)
+			.await
+			.context("DB ERROR (create file)")?;
+		Ok(row)
+	}
+
+	async fn find_by_id(&self, file_id: i32) -> Result<File> {
+		let row = sqlx::query_as::<_, File>("select * from users where id = $1")
+			.bind(file_id)
+			.fetch_one(&*self.pool)
+			.await
+			.context("DB ERROR (find file by id)")?;
+		Ok(row)
+	}
+}
+
+
 
 impl File {
 	pub async fn create(file: &File, pool: &PgPool) -> Result<(), sqlx::Error> {
