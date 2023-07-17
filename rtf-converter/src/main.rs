@@ -1,6 +1,9 @@
 //! rtf-converter
 
-use anyhow::Result;
+use anyhow::{
+    Result,
+    Context
+};
 use axum::{extract::Extension, headers::HeaderName, routing::get, Router};
 use axum_tracing_opentelemetry::{opentelemetry_tracing_layer, response_with_trace_layer};
 use http::header;
@@ -26,6 +29,7 @@ use tracing_subscriber::{
     EnvFilter,
 };
 use utoipa::OpenApi;
+use sqlx::postgres::PgPoolOptions;
 use utoipa_swagger_ui::SwaggerUi;
 use rtf_converter::{
     docs::ApiDoc,

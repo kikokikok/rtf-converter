@@ -22,6 +22,7 @@ pub mod rtf;
 #[cfg(any(test, feature = "test_utils"))]
 #[cfg_attr(docsrs, doc(cfg(feature = "test_utils")))]
 pub mod test_utils;
+mod persistence;
 
 
 /// Add two integers together.

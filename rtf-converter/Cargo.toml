@@ -72,6 +72,7 @@ task-local-extensions = "0.1"
 thiserror = "1.0"
 time = { version = "0.3", features = ["serde-well-known", "serde-human-readable"] }
 tokio = { version = "1.26", features = ["full", "parking_lot"] }
+redis = { version = "0.23.0", features = ["tokio-comp"] }
 rtf-grimoire = "0.2.1"
 lazy_static = "1.4.0"
 encoding_rs = "0.8.32"
@@ -91,6 +92,9 @@ utoipa = { version = "3.4", features = ["uuid", "axum_extras"] }
 utoipa-swagger-ui = { version = "3.1", features = ["axum"] }
 utoipa-gen = "3.4.1"
 axum_typed_multipart = "0.5.1"
+sqlx = { version = "0.7.1", features = ["runtime-tokio-rustls", "postgres"] }
+sqlxmq = "0.4.1"
+validator = { version = "0.15", features = ["derive"] }
 
 [dev-dependencies]
 assert-json-diff = "2.0"

@@ -2,21 +2,11 @@ apiVersion: skaffold/v4beta6
 kind: Config
 metadata:
   name: rtf-converter
-
 build:
-  tagPolicy:
-    gitCommit: { }
-  local:
-    useBuildkit : true
   artifacts:
     - image: rtf-converter
-      context: docker
-      docker:
-        dockerfile: Dockerfile
+      custom:
+        buildCommand: ./build.sh
 manifests:
   rawYaml:
     - docker/deployment.yaml
-portForward:
-  - resourceType: service
-    resourceName: docker
-    port: 20080
