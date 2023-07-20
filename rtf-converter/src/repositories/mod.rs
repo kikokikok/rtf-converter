@@ -10,9 +10,9 @@ pub mod file;
 pub type RepoExt = Extension<Arc<RepoImpls>>;
 
 pub async fn create_repositories() -> RepoImpls {
-	let db_pool = Arc::new(postgres::db_connect().await);
+	let rtf_db_pool = Arc::new(postgres::rtf_db_connect().await);
 	RepoImpls::new(
-		FileRepoImpl::new(db_pool.clone()),
+		FileRepoImpl::new(rtf_db_pool.clone()),
 	)
 }
 

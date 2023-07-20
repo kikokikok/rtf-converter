@@ -119,6 +119,14 @@ async fn main() -> Result<()> {
 
 async fn serve(name: &str, app: Router, port: u16) -> Result<()> {
     let bind_addr: SocketAddr = SocketAddr::new(IpAddr::V4(Ipv4Addr::UNSPECIFIED), port);
+
+    init_db_stores().await?;
+
+    axum::Server::bind(&bind_addr)
+        .serve(app.into_make_service_with_connect_info::<SocketAddr>())
+        .with_graceful_shutdown(shutdown())
+        .await?;
+
     info!(
         subject = "app_start",
         category = "init",
@@ -126,11 +134,6 @@ async fn serve(name: &str, app: Router, port: u16) -> Result<()> {
         name,
         bind_addr
     );
-
-    axum::Server::bind(&bind_addr)
-        .serve(app.into_make_service_with_connect_info::<SocketAddr>())
-        .with_graceful_shutdown(shutdown())
-        .await?;
 
     Ok(())
 }

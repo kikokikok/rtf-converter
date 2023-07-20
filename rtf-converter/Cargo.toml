@@ -37,7 +37,7 @@ async-trait = "0.1"
 axum = { version = "0.6.18", features = ["headers", "multipart"] }
 axum-tracing-opentelemetry = { version = "0.10", features = ["otlp"] }
 base64 = "0.21"
-chrono = { version = "0.4", default-features = false, features = ["clock"] }
+chrono = { version = "0.4", default-features = false, features = ["clock", "serde"] }
 config = "0.13"
 config-secret = "0.1.0"
 console-subscriber = { version = "0.1", default-features = false, features = [ "parking_lot" ], optional = true }
@@ -67,7 +67,7 @@ retry-policies = "0.1"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 serde_path_to_error = "0.1"
-serde_with = "3.0"
+serde_with = { version = "3.0", features = ["default", "chrono_0_4"] }
 sysinfo = "0.28"
 task-local-extensions = "0.1"
 thiserror = "1.0"
@@ -96,6 +96,16 @@ axum_typed_multipart = "0.5.1"
 sqlx = { version = "0.7.1", features = ["runtime-tokio-rustls", "postgres"] }
 sqlxmq = "0.4.1"
 validator = { version = "0.15", features = ["derive"] }
+dotenv = "0.15.0"
+
+[dependencies.uuid]
+version = "1.4.0"
+features = [
+	"v4",                # Lets you generate random UUIDs
+	"fast-rng",          # Use a faster (but still sufficiently random) RNG
+	"macro-diagnostics", # Enable better diagnostics for compile-time UUIDs
+	"serde",
+]
 
 [dev-dependencies]
 assert-json-diff = "2.0"
@@ -104,6 +114,7 @@ proptest = "1.1"
 rsa = { version = "0.8" }
 tokio-test = "0.4"
 wiremock = "0.5"
+mockall = "0.11.4"
 
 [features]
 ansi-logs = ["ansi_term"]
