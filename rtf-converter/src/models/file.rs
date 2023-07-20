@@ -1,3 +1,4 @@
+use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use serde_with::serde_as;
 use validator::{Validate};
@@ -8,7 +9,7 @@ use serde_with::DurationSeconds;
 pub type FileList = Vec<File>;
 
 #[serde_as]
-#[derive(FromRow, Type, Serialize, Deserialize, Debug, Validate)]
+#[derive(FromRow, Serialize, Deserialize, Debug, Validate)]
 pub struct NewFile {
 	pub tenant_id: Option<Uuid>,
 	pub owner_id: Option<Uuid>,
@@ -19,19 +20,19 @@ pub struct NewFile {
 	pub file_name: String,
 	#[validate(range(min = 0))]
 	pub file_size: u64,
-	pub insertion_date: chrono::NaiveDateTime,
+	pub insertion_date: chrono::DateTime<Utc>,
 	#[serde_as(as = "Option<DurationSeconds<i64>>")]
 	pub max_age: Option<chrono::Duration>,
 	pub templating_engine: Option<String>,
 	pub templating_engine_version: Option<String>,
 }
 
-#[derive(FromRow, Type, Serialize, Deserialize, Debug)]
+#[derive(FromRow, Serialize, Deserialize, Debug)]
 pub struct FileConditions {
 	pub file_name: Option<String>,
 }
 
-#[derive(FromRow, Type, Serialize, Deserialize, Debug, PartialEq, Eq, Validate)]
+#[derive(FromRow, Serialize, Deserialize, Debug, PartialEq, Eq, Validate)]
 pub struct FileIdentifier {
 	pub unique_id: Uuid,
 	#[validate(range(min = 1))]
@@ -39,7 +40,7 @@ pub struct FileIdentifier {
 }
 
 #[serde_as]
-#[derive(FromRow, Type, Serialize, Deserialize, Validate, Debug)]
+#[derive(FromRow, Serialize, Deserialize, Validate, Debug)]
 pub struct File {
 	pub id:  FileIdentifier,
 	pub tenant_id: Uuid,
@@ -51,7 +52,7 @@ pub struct File {
 	pub file_name: String,
 	#[validate(range(min = 0))]
 	pub file_size: u64,
-	pub insertion_date: chrono::NaiveDateTime,
+	pub insertion_date: chrono::DateTime<Utc>,
 	#[serde_as(as = "Option<DurationSeconds<i64>>")]
 	pub max_age: Option<chrono::Duration>,
 	pub templating_engine: Option<String>,

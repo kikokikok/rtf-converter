@@ -38,6 +38,6 @@ impl Repositories for RepoImpls {
 	type FileRepoImpl = FileRepoImpl;
 
 	fn file(&self) -> &Self::FileRepoImpl {
-		&self.user
+		&self.file
 	}
 }

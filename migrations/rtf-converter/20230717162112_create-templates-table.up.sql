@@ -7,7 +7,7 @@ CREATE TABLE files (
                        content_type VARCHAR(255),                       -- Content type of the file
                        file_name VARCHAR(255),                          -- Name of the file
                        file_size BIGINT,                                -- Size of the file in bytes
-                       created_at TIMESTAMP NOT NULL DEFAULT NOW(),     -- Timestamp when the file was inserted
+                       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),     -- Timestamp when the file was inserted
                        max_age INTERVAL NOT NULL DEFAULT '1 month',     -- Maximum age of the file (default is 1 month)
                        templating_engine VARCHAR(255),                  -- Name of the templating engine used
                        templating_engine_version VARCHAR(50),           -- Version of the templating engine

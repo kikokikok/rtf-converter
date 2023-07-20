@@ -1,7 +1,6 @@
 use crate::infra::db::postgres::RtfDb;
 use crate::models::file::{NewFile, File, FileConditions, FileIdentifier, FileList};
-use crate::error::{AppError, AppResult};
-use anyhow::Context;
+use anyhow::{Result, Context};
 use async_trait::async_trait;
 use uuid::Uuid;
 use validator::Validate;
@@ -12,10 +11,10 @@ use mockall::{automock, mock, predicate::*};
 #[cfg_attr(test, automock)]
 #[async_trait]
 pub trait FileRepo {
-	async fn find_all(&self, conditions: &FileConditions) -> AppResult<FileList>;
-	async fn add(&self, file_data: &NewFile) -> AppResult<FileIdentifier>;
-	async fn find_by_id(&self, file_id: Uuid) -> AppResult<File>;
-	async fn delete(&self, file_id: Uuid) -> AppResult<()>;
+	async fn find_all(&self, conditions: &FileConditions) -> Result<FileList>;
+	async fn add(&self, file_data: &NewFile) -> Result<FileIdentifier>;
+	async fn find_by_id(&self, file_id: Uuid) -> Result<File>;
+	async fn delete(&self, file_id: Uuid) -> Result<()>;
 }
 
 pub struct FileRepoImpl {
@@ -31,7 +30,7 @@ impl FileRepoImpl {
 #[async_trait]
 impl FileRepo for FileRepoImpl {
 
-	async fn find_all(&self, conditions: &FileConditions) -> AppResult<FileList> {
+	async fn find_all(&self, conditions: &FileConditions) -> Result<FileList> {
 		let mut query = sqlx::query_as::<_, File>("select * from files");
 		if let Some(name) = &conditions.file_name {
 			query = sqlx::query_as::<_, File>("select * from files where file_name LIKE $1")
@@ -44,7 +43,7 @@ impl FileRepo for FileRepoImpl {
 		Ok(result)
 	}
 
-	async fn add(&self, file_data: &NewFile) -> AppResult<FileIdentifier> {
+	async fn add(&self, file_data: &NewFile) -> Result<FileIdentifier> {
 		if let Err(errors) = file_data.validate() {
 			let err_messages: Vec<String> = errors
 				.field_errors()
@@ -52,8 +51,7 @@ impl FileRepo for FileRepoImpl {
 				.map(|(field, error)| format!("{}: {:?}", field, error))
 				.collect();
 
-			return AppError(sqlx::Error::Decode(
-				Box::new(sqlx::Error::RowNotFound), // Use a custom error type if desired
+			return anyhow::Error(sqlx::Error::Decode(Box::new(sqlx::Error::RowNotFound), // Use a custom error type if desired
 			));
 		}
 
@@ -79,7 +77,7 @@ impl FileRepo for FileRepoImpl {
 		Ok(row)
 	}
 
-	async fn find_by_id(&self, file_id: Uuid) -> AppResult<File> {
+	async fn find_by_id(&self, file_id: Uuid) -> Result<File> {
 		let row = sqlx::query_as::<_, File>("select * from users where id = $1")
 			.bind(file_id)
 			.fetch_one(&*self.pool)
@@ -88,7 +86,7 @@ impl FileRepo for FileRepoImpl {
 		Ok(row)
 	}
 
-	async fn delete(&self, file_id: Uuid) -> AppResult<()> {
+	async fn delete(&self, file_id: Uuid) -> Result<()> {
 		sqlx::query("DELETE FROM files WHERE id = $1")
 			.execute(&*self.pool)
 			.await?;
