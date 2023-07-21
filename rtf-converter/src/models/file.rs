@@ -1,10 +1,8 @@
-use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use serde_with::serde_as;
 use validator::{Validate};
-use sqlx::{Decode, Encode, FromRow, Type};
+use sqlx::{FromRow, Type};
 use uuid::Uuid;
-use serde_with::DurationSeconds;
 
 pub type FileList = Vec<File>;
 
@@ -19,20 +17,19 @@ pub struct NewFile {
 	#[validate(length(min = 1, max = 255))]
 	pub file_name: String,
 	#[validate(range(min = 0))]
-	pub file_size: u64,
-	pub insertion_date: chrono::DateTime<Utc>,
-	#[serde_as(as = "Option<DurationSeconds<i64>>")]
-	pub max_age: Option<chrono::Duration>,
+	pub file_size: i64,
+	pub insertion_date: Option<chrono::DateTime<chrono::Utc>>,
+	pub max_age: Option<chrono::DateTime<chrono::Utc>>,
 	pub templating_engine: Option<String>,
 	pub templating_engine_version: Option<String>,
 }
 
-#[derive(FromRow, Serialize, Deserialize, Debug)]
+#[derive(FromRow, Type, Serialize, Deserialize, Debug)]
 pub struct FileConditions {
 	pub file_name: Option<String>,
 }
 
-#[derive(FromRow, Serialize, Deserialize, Debug, PartialEq, Eq, Validate)]
+#[derive(FromRow, Type, Serialize, Deserialize, Debug, PartialEq, Eq, Validate)]
 pub struct FileIdentifier {
 	pub unique_id: Uuid,
 	#[validate(range(min = 1))]
@@ -51,10 +48,9 @@ pub struct File {
 	#[validate(length(min = 1, max = 255))]
 	pub file_name: String,
 	#[validate(range(min = 0))]
-	pub file_size: u64,
-	pub insertion_date: chrono::DateTime<Utc>,
-	#[serde_as(as = "Option<DurationSeconds<i64>>")]
-	pub max_age: Option<chrono::Duration>,
+	pub file_size: i64,
+	pub insertion_date: Option<chrono::DateTime<chrono::Utc>>,
+	pub max_age: Option<chrono::DateTime<chrono::Utc>>,
 	pub templating_engine: Option<String>,
 	pub templating_engine_version: Option<String>,
 }

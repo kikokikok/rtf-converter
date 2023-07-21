@@ -2,21 +2,17 @@
 
 use crate::{
     error::AppError,
-    routes::{
-        convert::{
-            self,
-            RequestData
-        },
-        health,
-    }
+    routes::template::{self, TemplateUploadRequest, TemplateUploadResponse, ReqUuid, ReqDateTimeUtc},
+    routes::health,
+    routes::convert::{self, RequestData}
 };
 use utoipa::OpenApi;
 
 /// API documentation generator.
 #[derive(OpenApi)]
 #[openapi(
-        paths(health::healthcheck, convert::convert),
-        components(schemas(AppError), schemas(RequestData)),
+        paths(health::healthcheck, convert::convert, template::upload),
+        components(schemas(AppError), schemas(TemplateUploadRequest), schemas(TemplateUploadResponse), schemas(RequestData), schemas(ReqUuid), schemas(ReqDateTimeUtc)),
         tags(
             (name = "", description = "rtf-converter service/middleware")
         )

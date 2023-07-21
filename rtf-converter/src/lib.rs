@@ -16,15 +16,16 @@ pub mod settings;
 pub mod tracer;
 pub mod tracing_layers;
 pub mod rtf;
+pub mod repositories;
+pub mod models;
+pub mod infra;
 
 
 /// Test utilities.
 #[cfg(any(test, feature = "test_utils"))]
 #[cfg_attr(docsrs, doc(cfg(feature = "test_utils")))]
 pub mod test_utils;
-mod models;
-mod repositories;
-mod infra;
+
 
 
 /// Add two integers together.

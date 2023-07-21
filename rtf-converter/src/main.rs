@@ -2,10 +2,8 @@
 
 use anyhow::{
     Result,
-    Context
 };
 use axum::{extract::Extension, headers::HeaderName, routing::get, Router};
-use axum_tracing_opentelemetry::{opentelemetry_tracing_layer, response_with_trace_layer};
 use http::header;
 use std::{
     future::ready,
@@ -13,6 +11,7 @@ use std::{
     net::{IpAddr, Ipv4Addr, SocketAddr},
     time::Duration,
 };
+use axum_tracing_opentelemetry::middleware::{OtelAxumLayer, OtelInResponseLayer};
 use tokio::signal::{
     self,
     unix::{signal, SignalKind},
@@ -29,7 +28,6 @@ use tracing_subscriber::{
     EnvFilter,
 };
 use utoipa::OpenApi;
-use sqlx::postgres::PgPoolOptions;
 use utoipa_swagger_ui::SwaggerUi;
 use rtf_converter::{
     docs::ApiDoc,
@@ -87,11 +85,11 @@ async fn main() -> Result<()> {
             .route_layer(axum::middleware::from_fn(middleware::metrics::track))
             .layer(Extension(env))
             // Include trace context as header into the response.
-            .layer(response_with_trace_layer())
+            .layer(OtelInResponseLayer::default())
             // Opentelemetry tracing middleware.
             // This returns a `TraceLayer` configured to use
             // OpenTelemetry’s conventional span field names.
-            .layer(opentelemetry_tracing_layer())
+            .layer(OtelAxumLayer::default())
             // Set and propagate "request_id" (as a ulid) per request.
             .layer(
                 ServiceBuilder::new()
@@ -119,8 +117,6 @@ async fn main() -> Result<()> {
 
 async fn serve(name: &str, app: Router, port: u16) -> Result<()> {
     let bind_addr: SocketAddr = SocketAddr::new(IpAddr::V4(Ipv4Addr::UNSPECIFIED), port);
-
-    init_db_stores().await?;
 
     axum::Server::bind(&bind_addr)
         .serve(app.into_make_service_with_connect_info::<SocketAddr>())

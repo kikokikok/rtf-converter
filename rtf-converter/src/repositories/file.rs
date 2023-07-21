@@ -50,9 +50,6 @@ impl FileRepo for FileRepoImpl {
 				.into_iter()
 				.map(|(field, error)| format!("{}: {:?}", field, error))
 				.collect();
-
-			return anyhow::Error(sqlx::Error::Decode(Box::new(sqlx::Error::RowNotFound), // Use a custom error type if desired
-			));
 		}
 
 		let row = sqlx::query_as::<_, FileIdentifier>(

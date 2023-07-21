@@ -18,9 +18,18 @@
         "tags": [
           "convert"
         ],
-        "summary": "GET handler for internal pings and availability",
-        "description": "GET handler for internal pings and availability",
         "operationId": "convert",
+        "requestBody": {
+          "description": "RTF file content",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestData"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "Conversion successful"
@@ -86,6 +95,18 @@
           "title": {
             "type": "string",
             "nullable": true
+          }
+        }
+      },
+      "RequestData": {
+        "type": "object",
+        "required": [
+          "rtf_file"
+        ],
+        "properties": {
+          "rtf_file": {
+            "type": "string",
+            "format": "binary"
           }
         }
       }
