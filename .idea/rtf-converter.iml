@@ -5,8 +5,8 @@
       <sourceFolder url="file://$MODULE_DIR$/rtf-converter-benches/benches" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/rtf-converter-wasm/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/rtf-converter-wasm/tests" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/rtf-converter/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/rtf-converter/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../rtf-converter-api/rtf-converter/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../rtf-converter-api/rtf-converter/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
