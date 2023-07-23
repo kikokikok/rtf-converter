@@ -84,7 +84,7 @@ encoding_rs = "0.8.32"
 codepage = "0.1.1"
 string-builder = "0.2.0"
 ## Tied to opentelemetry-otlp dependency
-tonic = { version = "^0.8.0", features = ["tls"]}
+tonic = { version = "^0.9.2", features = ["tls"]}
 tower = "0.4"
 tower-http = { version = "0.4", features = ["catch-panic", "request-id", "sensitive-headers", "timeout", "trace", "util"] }
 tracing = "0.1"
