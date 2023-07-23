@@ -11,11 +11,10 @@ pub type RepoExt = Extension<Arc<RepoImpls>>;
 
 pub async fn create_repositories() -> RepoImpls {
 	let rtf_db_pool = Arc::new(postgres::rtf_db_connect().await);
-	RepoImpls::new(
-		FileRepoImpl::new(rtf_db_pool.clone()),
-	)
+	RepoImpls::new(FileRepoImpl::new(rtf_db_pool.clone()))
 }
 
+#[derive(Clone)]
 pub struct RepoImpls {
 	pub file: FileRepoImpl,
 }
@@ -34,6 +33,7 @@ pub trait Repositories {
 
 	fn file(&self) -> &Self::FileRepoImpl;
 }
+
 impl Repositories for RepoImpls {
 	type FileRepoImpl = FileRepoImpl;
 

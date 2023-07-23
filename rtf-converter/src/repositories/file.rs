@@ -7,6 +7,7 @@ use validator::Validate;
 
 #[cfg(test)]
 use mockall::{automock, mock, predicate::*};
+use opentelemetry::trace::FutureExt;
 
 #[cfg_attr(test, automock)]
 #[async_trait]
@@ -17,6 +18,7 @@ pub trait FileRepo {
 	async fn delete(&self, file_id: Uuid) -> Result<()>;
 }
 
+#[derive(Clone)]
 pub struct FileRepoImpl {
 	pool: RtfDb,
 }
@@ -54,8 +56,8 @@ impl FileRepo for FileRepoImpl {
 
 		let row = sqlx::query_as::<_, FileIdentifier>(
 			r#"
-			INSERT INTO files (tenant_id, owner_id, file_binary_content, content_type, file_name, max_age, templating_engine, templating_engine_version, version)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+			INSERT INTO files (tenant_id, owner_id, file_binary_content, content_type, file_name, file_size, created_at, max_age, templating_engine, templating_engine_version, version)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
             RETURNING id, version
             "#,
 		)
@@ -64,13 +66,19 @@ impl FileRepo for FileRepoImpl {
 			.bind(&file_data.file_binary_content)
 			.bind(&file_data.content_type)
 			.bind(&file_data.file_name)
+			.bind(&file_data.file_size)
+			.bind(&file_data.insertion_date)
 			.bind(&file_data.max_age)
 			.bind(&file_data.templating_engine)
 			.bind(&file_data.templating_engine_version)
 			.bind(1)
 			.fetch_one(&*self.pool)
 			.await
-			.context("DB ERROR (create file)")?;
+			.map_err(|e| {
+				tracing::error!("Template Insertion failed: {:?}", e);
+				e
+			})?;
+
 		Ok(row)
 	}
 

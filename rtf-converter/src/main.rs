@@ -11,6 +11,7 @@ use std::{
     net::{IpAddr, Ipv4Addr, SocketAddr},
     time::Duration,
 };
+use std::sync::Arc;
 use axum_tracing_opentelemetry::middleware::{OtelAxumLayer, OtelInResponseLayer};
 use tokio::signal::{
     self,
@@ -31,6 +32,7 @@ use utoipa::OpenApi;
 use utoipa_swagger_ui::SwaggerUi;
 use rtf_converter::{
     docs::ApiDoc,
+    repositories::create_repositories,
     metrics::{process, prom::setup_metrics_recorder},
     middleware::{self, request_ulid::MakeRequestUlid, runtime},
     router,
@@ -82,7 +84,7 @@ async fn main() -> Result<()> {
     let app = async {
         let req_id = HeaderName::from_static(REQUEST_ID);
         let router = router::setup_app_router()
-            .route_layer(axum::middleware::from_fn(middleware::metrics::track))
+            .await.route_layer(axum::middleware::from_fn(middleware::metrics::track))
             .layer(Extension(env))
             // Include trace context as header into the response.
             .layer(OtelInResponseLayer::default())

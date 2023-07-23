@@ -2,7 +2,7 @@
 
 use crate::{
     error::AppError,
-    routes::template::{self, TemplateUploadRequest, TemplateUploadResponse, ReqUuid, ReqDateTimeUtc},
+    routes::template::{self, TemplateUploadRequest, TemplateUploadResponse, ReqUuid, ReqHumanDuration},
     routes::health,
     routes::convert::{self, RequestData}
 };
@@ -12,7 +12,7 @@ use utoipa::OpenApi;
 #[derive(OpenApi)]
 #[openapi(
         paths(health::healthcheck, convert::convert, template::upload),
-        components(schemas(AppError), schemas(TemplateUploadRequest), schemas(TemplateUploadResponse), schemas(RequestData), schemas(ReqUuid), schemas(ReqDateTimeUtc)),
+        components(schemas(AppError), schemas(TemplateUploadRequest), schemas(TemplateUploadResponse), schemas(RequestData), schemas(ReqUuid), schemas(ReqHumanDuration)),
         tags(
             (name = "", description = "rtf-converter service/middleware")
         )

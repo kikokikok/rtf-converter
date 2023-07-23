@@ -21,7 +21,7 @@ pub struct NewFile {
 	pub insertion_date: Option<chrono::DateTime<chrono::Utc>>,
 	pub max_age: Option<chrono::DateTime<chrono::Utc>>,
 	pub templating_engine: Option<String>,
-	pub templating_engine_version: Option<String>,
+	pub templating_engine_version: Option<i32>,
 }
 
 #[derive(FromRow, Type, Serialize, Deserialize, Debug)]
@@ -31,7 +31,7 @@ pub struct FileConditions {
 
 #[derive(FromRow, Type, Serialize, Deserialize, Debug, PartialEq, Eq, Validate)]
 pub struct FileIdentifier {
-	pub unique_id: Uuid,
+	pub id: Uuid,
 	#[validate(range(min = 1))]
 	pub version: i32,
 }
